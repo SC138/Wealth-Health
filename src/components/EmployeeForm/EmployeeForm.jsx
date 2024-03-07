@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import InputField from "../InputField/InputField";
+import "./style.module.css";
 
 const EmployeeForm = () => {
   const [employee, setEmployee] = useState({
@@ -11,9 +12,8 @@ const EmployeeForm = () => {
     City: "",
     State: "",
     ZipCode: "",
+    Department: "",
   });
-
-
 
   const handleChange = (e) => {
     setEmployee({ ...employee, [e.target.name]: e.target.value });
@@ -25,63 +25,70 @@ const EmployeeForm = () => {
   };
 
   return (
-    <>
-    <h2>Create Employee</h2>
-    <form onSubmit={handleSubmit}>
-      <InputField
-        label="First Name"
-        name="FirstName"
-        value={employee.FirstName}
-        onChange={handleChange}
-      />
-      <InputField
-        label="Last Name"
-        name="LastName"
-        value={employee.LastName}
-        onChange={handleChange}
-      />
-      <InputField
-        label="Date of Birth"
-        name="DateOfBirth"
-        value={employee.DateOfBirth}
-        onChange={handleChange}
-      />
-      <InputField
-        label="Start Date"
-        name="StartDate"
-        value={employee.StartDate}
-        onChange={handleChange}
-      />
-      <p>Adress</p>
+    <div className="form-container">
+      <h2>Create Employee</h2>
+      <form className="form" onSubmit={handleSubmit}>
         <InputField
-            label="Street"
-            name="Street"
-            value={employee.Street}
-            onChange={handleChange}
+          label="First Name"
+          name="FirstName"
+          value={employee.FirstName}
+          onChange={handleChange}
+          required
         />
         <InputField
-            label="City"
-            name="City"
-            value={employee.City}
-            onChange={handleChange}
+          label="Last Name"
+          name="LastName"
+          value={employee.LastName}
+          onChange={handleChange}
+          required
         />
         <InputField
-            label="State"
-            name="State"
-            value={employee.State}
-            onChange={handleChange}
+          label="Date of Birth"
+          name="DateOfBirth"
+          value={employee.DateOfBirth}
+          onChange={handleChange}
+          required
         />
         <InputField
-            label="Zip Code"
-            name="ZipCode"
-            value={employee.ZipCode}
-            onChange={handleChange}
+          label="Start Date"
+          name="StartDate"
+          value={employee.StartDate}
+          onChange={handleChange}
         />
-        
-      <p>Departement</p>
-      <button type="submit">Save</button>
-    </form>
-    </>
+        <p>Adress</p>
+        <InputField
+          label="Street"
+          name="Street"
+          value={employee.Street}
+          onChange={handleChange}
+          required
+        />
+        <InputField
+          label="City"
+          name="City"
+          value={employee.City}
+          onChange={handleChange}
+          required
+        />
+        <InputField
+          label="State"
+          name="State"
+          value={employee.State}
+          onChange={handleChange}
+          required
+        />
+        <InputField
+          label="Zip Code"
+          name="ZipCode"
+          value={employee.ZipCode}
+          onChange={handleChange}
+          required
+        />
+
+        <p>Departement</p>
+        <button type="submit">Save</button>
+      </form>
+    </div>
   );
 };
 
