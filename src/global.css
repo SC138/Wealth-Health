@@ -13,7 +13,7 @@ body {
 h1{
     text-align: center;
     font-size: 100px;
-    margin-bottom: -100px;
+    margin-bottom: 70px;
 }
 
 section{
@@ -24,9 +24,41 @@ section{
 
 }
 
+.modal-content{
+    height: 55px;
+    z-index: 1;
+}
+
+.close-btn{
+    left: 566px;
+}
+
 
 .dashboard{
     background-color: #deeba0;
+    position: relative;
+    min-height: 100vh;
+}
+
+.link-employees{
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 20px;
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+    text-align: center;
+    border: solid 2px #859533;
+    padding: 10px 30px;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.link-employees .icon-with-text{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }
 
 .logo-wh{
@@ -35,33 +67,31 @@ section{
     justify-content: center;
 }
 
-.form-container{
+
+.form-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: center; 
     justify-content: center;
-    min-height: 100vh;
-    margin-top: -100px;
+    margin-top: -50px;
 }
   
 .form {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start; 
     gap: 10px;
     width: fit-content;
     border: solid 2px #859533;
     box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
     padding: 50px;
     border-radius: 10px;
-  }
+}
 
-.title-form{
-    margin-bottom: 45px;
-    border: solid 2px #859533;
-    padding: 10px 30px;
-    border-radius: 10px;
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+.title-form, .address {
+    text-align: left; 
+    margin-bottom: 15px;
+    text-decoration: underline;
 }
 
 
@@ -73,17 +103,15 @@ text-align: center;
     display: flex;
     flex-direction: column;
     width: 100%;
-    margin-bottom: 10px; /* Ajuste selon l'espacement désiré */
+    margin-bottom: 10px;
   }
   
-
-.adress{
-    border: solid 2px #859533;
-    padding: 10px 30px;
-    border-radius: 10px;
+  .address{
     font-weight: bold;
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-}
+    font-size: 1.5em;
+  }
+
+
 
 .input-container {
     display: flex;
@@ -104,12 +132,80 @@ border-radius: 5px;
 }
   
 .btn-save{
+    display: block;
+    margin: auto;
+    margin-top: 10px;
     width: 70px;
     height: 30px;
     font-size: 18px;
     font-weight: bold;
-    background-color: white;
+    background-color: #859533;
+    color: white;
     border: solid 2px #859533;
     border-radius: 5px;
     box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+    cursor: pointer;
 }
+
+.employees-page{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #deeba0;
+    min-height: 100vh;
+}
+
+.employees-page h2{
+    font-size: 50px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.search{
+    margin-bottom: 10px;
+}
+
+table{ 
+    margin-top: 20px;
+    border-collapse: collapse;
+    border: 3px solid black;
+}
+
+th, td{
+    border: 3px solid black;
+    padding: 10px;
+}
+
+.pagination{
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+}
+
+.pagination button{
+    margin: 0 5px;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #859533;
+    color: white;
+    cursor: pointer;
+}
+
+.sort-icon {
+    color: grey; 
+    user-select: none;
+  }
+
+  .sort-icon.active {
+    color: blue; 
+  }
+  
+  td {
+    border-bottom: 1px solid black; /* Couleur de ligne claire pour la séparation */
+  }
+  
+  /* Pour les en-têtes du tableau */
+  th {
+    border-bottom: 2px solid black; /* Ligne un peu plus épaisse pour les en-têtes */
+  }
