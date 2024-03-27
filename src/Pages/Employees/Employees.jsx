@@ -1,48 +1,65 @@
 import React, { useEffect, useMemo, useState, useCallback } from "react";
-import {
-  useTable,
-  useSortBy,
-  useGlobalFilter,
-  usePagination,
-} from "react-table";
+import { useTable, useSortBy, useGlobalFilter, usePagination } from "react-table";
+
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import logo from "../../assets/img/logo.png";
+import logo from "../../assets/img/logo.webp";
+import { Modal } from "react-new-modal-plugin";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import editIcon from "../../assets/img/pen-to-square-solid.svg";
+import trashIcon from "../../assets/img/trash-can-solid.svg";
 
 const Employees = () => {
-  const navigate = useNavigate();
-  const [data, setData] = useState([]);
-  const [editingEmployee, setEditingEmployee] = useState(null);
+  const navigate = useNavigate(); // Hook pour la navigation
+  const [data, setData] = useState([]); // État pour stocker les données des employés
+  const [isModalOpen, setIsModalOpen] = useState(false); // État pour ouvrir/fermer la modale
+  const [currentEmployeeId, setCurrentEmployeeId] = useState(null); // État pour stocker l'ID de l'employé à supprimer
 
   useEffect(() => {
+    // Récupérer les données des employés depuis le stockage local
     const savedEmployees = JSON.parse(localStorage.getItem("employees")) || [];
     setData(savedEmployees);
   }, []);
 
   const formatDate = (dateString) => {
+    // Fonction pour formater la date au format JJ/MM/AAAA
     const options = { year: "numeric", month: "2-digit", day: "2-digit" };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
-  const handleDelete = useCallback(
-    (employeeId) => {
-      const updatedEmployees = data.filter(
-        (employee) => employee.id !== employeeId
-      );
-      setData(updatedEmployees);
-      localStorage.setItem("employees", JSON.stringify(updatedEmployees));
-    },
-    [data]
-  ); // data est une dépendance de handleDelete
+  const actionYes = useCallback(() => {
+    // Fonction pour supprimer l'employé et fermer la modale
+    if (currentEmployeeId == null) return;
+    const updatedEmployees = data.filter(
+      (employee) => employee.id !== currentEmployeeId
+    );
+    setData(updatedEmployees);
+    localStorage.setItem("employees", JSON.stringify(updatedEmployees));
+    setIsModalOpen(false); // Fermer la modale après action
+    setCurrentEmployeeId(null); // Réinitialiser l'ID de l'employé
+  }, [currentEmployeeId, data]);
+
+  const actionNo = () => {
+    // Fonction pour fermer la modale sans supprimer l'employé
+    setIsModalOpen(false);
+  };
+
+  const deleteEmployee = useCallback((idEmployee) => {
+    setCurrentEmployeeId(idEmployee); // Stocker l'ID de l'employé à supprimer
+    setIsModalOpen(true); // Ouvrir la modale
+  }, []);
 
   const handleUpdate = useCallback(
+    // Fonction pour naviguer vers la page de mise à jour de l'employé
     (employeeId) => {
-      navigate(`/edit-employee/${employeeId}`);
+      navigate(`/${employeeId}`);
     },
     [navigate]
-  ); // navigate est une dépendance de handleUpdate
+  );
 
   const columns = useMemo(
+    // Définition des colonnes pour le tableau
     () => [
       { Header: "First Name", accessor: "FirstName" },
       { Header: "Last Name", accessor: "LastName" },
@@ -65,57 +82,91 @@ const Employees = () => {
         Header: "Actions",
         accessor: "actions",
         Cell: ({ row }) => (
+          // Afficher les boutons d'édition et de suppression
           <>
-            <button onClick={() => handleUpdate(row.original.id)}>
-              Update
+            <button
+              onClick={() => handleUpdate(row.original.id)}
+              style={{
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                marginRight: "35px",
+                width: "20px"
+              }}
+              alt="Edit"
+              title="Edit"
+            >
+              <img className="icn-edit"src={editIcon} alt="Edit" />
+              {/* <FontAwesomeIcon icon={faEdit} size="2x" /> */}
             </button>
-            <button onClick={() => handleDelete(row.original.id)}>
-              Delete
+            <button
+              onClick={() => deleteEmployee(row.original.id)}
+              style={{ background: "none", border: "none", cursor: "pointer", width: "20px"}}
+              alt="Delete"
+              title="Delete"
+            >
+              <img className="icn-delete" src={trashIcon} alt="Delete" />
+              {/* <FontAwesomeIcon icon={faTrashAlt} size="2x" /> */}
             </button>
           </>
         ),
       },
     ],
-    [handleDelete, handleUpdate]
+    [deleteEmployee, handleUpdate]
   );
 
+  // Utilisation de la bibliothèque react-table pour la pagination, le tri et la recherche
   const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    page,
-    prepareRow,
-    canPreviousPage,
-    canNextPage,
-    pageOptions,
-    pageCount,
-    gotoPage,
-    nextPage,
-    previousPage,
-    setPageSize,
+    getTableProps, // Propriétés de la table
+    getTableBodyProps, // Propriétés du corps de la table
+    headerGroups, // Groupes d'en-tête
+    page, // Page actuelle
+    prepareRow, // Fonction pour préparer la ligne
+    canPreviousPage, // Booléen pour la page précédente
+    canNextPage, // Booléen pour la page suivante
+    pageOptions, // Options de page
+    pageCount, // Nombre de pages
+    gotoPage, // Fonction pour aller à une page
+    nextPage, // Fonction pour aller à la page suivante
+    previousPage, // Fonction pour aller à la page précédente
+    setPageSize, // Fonction pour définir la taille de la page
     state: { pageIndex, pageSize },
     setGlobalFilter,
   } = useTable({ columns, data }, useGlobalFilter, useSortBy, usePagination);
 
+  // Options pour la taille de la page
   const pageSizeOptions = [10, 25, 50, 100];
 
+  // Fonction pour gérer la recherche
   const handleSearch = (e) => {
     setGlobalFilter(e.target.value || undefined);
+  };
+
+  // Style pour la modale de confirmation
+  const style = {
+    textAlign: "center",
+    height: "100px",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
   };
 
   return (
     <>
       <div className="employees-page">
+        {/* Lien pour retourner à la page d'accueil */}
         <Link to="/">
           <img src={logo} alt="Logo wealth health" className="logo-wh" />
         </Link>
         <h2>Current Employees</h2>
+        {/* Champ de recherche pour filtrer les employés */}
         <input
           type="text"
           placeholder="Search..."
           onChange={handleSearch}
           className="search"
         />
+        {/* Sélecteur pour la taille de page */}
         <select
           value={pageSize}
           onChange={(e) => {
@@ -128,13 +179,16 @@ const Employees = () => {
             </option>
           ))}
         </select>
+        {/* Table des employés avec pagination et tri */}
         <table {...getTableProps()}>
           <thead>
+            {/* Génération des en-têtes de colonne */}
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column) => (
                   <th {...column.getHeaderProps(column.getSortByToggleProps())}>
                     {column.render("Header")}
+                    {/* Indicateurs de tri */}
                     <span>
                       {column.isSorted ? (
                         column.isSortedDesc ? (
@@ -155,6 +209,7 @@ const Employees = () => {
             ))}
           </thead>
           <tbody {...getTableBodyProps()}>
+            {/* Affichage des lignes de données de la page actuelle */}
             {page.map((row) => {
               prepareRow(row);
               return (
@@ -167,6 +222,7 @@ const Employees = () => {
             })}
           </tbody>
         </table>
+        {/* Barre de pagination */}
         <div className="pagination">
           <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
             {"<<"}
@@ -187,8 +243,29 @@ const Employees = () => {
             {">>"}
           </button>
         </div>
+        {/* Lien pour retourner à la page d'accueil */}
         <Link to="/">Return to HomePage</Link>
       </div>
+      {/* Modale de confirmation pour la suppression d'un employé */}
+      {isModalOpen && (
+        <Modal
+          isOpen={isModalOpen}
+          closeModal={() => setIsModalOpen(false)}
+          style={style}
+        >
+          <h3 className="titleModal">
+            Are you sure? This action is irreversible!
+          </h3>
+          <div>
+            <button className="btnDelete btnModal" onClick={actionYes}>
+              Yes
+            </button>
+            <button className="btnNo btnModal" onClick={actionNo}>
+              No
+            </button>
+          </div>
+        </Modal>
+      )}
     </>
   );
 };

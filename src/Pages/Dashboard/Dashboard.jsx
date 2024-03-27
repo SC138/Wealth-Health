@@ -4,20 +4,21 @@ import Header from "../../components/Header/Header";
 import { Modal } from "react-new-modal-plugin";
 import "react-new-modal-plugin/dist/global.css";
 import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUsers } from "@fortawesome/free-solid-svg-icons";
+
+// import users from "../../assets/img/users-solid.svg";
+import UsersIcon from "../../components/UsersIcon/UsersIcon";
 import { v4 as uuidv4 } from "uuid";
 
+// Page de tableau de bord avec un formulaire pour ajouter un nouvel employé.
 const Dashboard = () => {
-  // Initialise l'état pour savoir si la modale est ouverte ou non.
+  // États pour gérer l'ouverture de la modale, son contenu et la réinitialisation du formulaire.
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // Initialise l'état pour le contenu de la modale.
   const [modalContent, setModalContent] = useState("");
-
   const [resetForm, setResetForm] = useState(false);
 
+  // Fonction pour gérer la sauvegarde de l'employé.
   const handleEmployeeSave = (newEmployee) => {
-    // Fonction pour calculer l'âge à partir de la date de naissance
+    // Fonction pour calculer l'âge à partir de la date de naissance.
     const calculateAge = (dateOfBirth) => {
       const today = new Date();
       const birthDate = new Date(dateOfBirth);
@@ -29,49 +30,59 @@ const Dashboard = () => {
       return age;
     };
 
-    // Vérifie d'abord l'âge de l'employé
+    // Vérifier si l'employé a au moins 18 ans.
     if (newEmployee.DateOfBirth) {
       const age = calculateAge(newEmployee.DateOfBirth);
       if (age < 18) {
         setModalContent("Employee must be at least 18 years old.");
         setIsModalOpen(true);
-        return; // Sort de la fonction sans ajouter l'employé si moins de 18 ans
+        return;
       }
     } else {
       setModalContent("Please enter a valid date of birth for the employee.");
       setIsModalOpen(true);
-      return; // Sort de la fonction si la date de naissance n'est pas fournie
+      return;
     }
 
-    // Vérifie ensuite si l'employé existe déjà
+    // Récupère les employés depuis le stockage local ou un tableau vide.
     const employees = JSON.parse(localStorage.getItem("employees")) || [];
-    const employeeExists = employees.some(
-      (employee) =>
-        employee.FirstName === newEmployee.FirstName &&
-        employee.LastName === newEmployee.LastName &&
-        employee.Street === newEmployee.Street
-    );
 
-    if (employeeExists) {
-      setModalContent("Employee already exists.");
-      setIsModalOpen(true);
+    // Vérifie si l'employé existe déjà, puis met à jour ou crée un nouvel employé.
+    if (newEmployee.id) {
+      const updatedEmployees = employees.map((emp) =>
+        emp.id === newEmployee.id ? { ...emp, ...newEmployee } : emp
+      );
+      localStorage.setItem("employees", JSON.stringify(updatedEmployees));
+      setModalContent("Employee Updated Successfully!");
     } else {
-      // employees.push(newEmployee);
-      const employeeWithId = { ...newEmployee, id: uuidv4() };
-      employees.push(employeeWithId);
-      localStorage.setItem("employees", JSON.stringify(employees));
-      setModalContent("Employee Created !");
-      setIsModalOpen(true);
-      setResetForm(true);
+      const employeeExists = employees.some(
+        (employee) =>
+          employee.FirstName === newEmployee.FirstName &&
+          employee.LastName === newEmployee.LastName &&
+          employee.Street === newEmployee.Street
+      );
+
+      if (employeeExists) {
+        setModalContent("Employee already exists.");
+      } else {
+        const employeeWithId = { ...newEmployee, id: uuidv4() };
+        employees.push(employeeWithId);
+        localStorage.setItem("employees", JSON.stringify(employees));
+        setModalContent("Employee Created !");
+      }
     }
+
+    setIsModalOpen(true); // Ouvre la modale pour afficher le message.
+    setResetForm(true); // Réinitialise le formulaire après la sauvegarde.
   };
 
   return (
     <div className="dashboard">
       <Header />
       <Link to="/employees" className="link-employees">
+        {/* Lien vers la liste des employés. */}
         <div className="icon-with-text">
-          <FontAwesomeIcon icon={faUsers} size="2x" color="#6F860F" />
+          <UsersIcon color="#6F860F" />
           <span>Employees List</span>
         </div>
       </Link>
@@ -80,6 +91,7 @@ const Dashboard = () => {
         {/* Affiche la modale si isModalOpen est vrai */}
         <p>{modalContent}</p>
       </Modal>
+      {/* Formulaire d'employé avec gestion de la sauvegarde et de la réinitialisation. */}
       <EmployeeForm
         onEmployeeSave={handleEmployeeSave}
         resetForm={resetForm}

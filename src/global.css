@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap'); */
 
 * {
     margin: 0;
@@ -11,6 +11,7 @@ body {
   }
 
 h1{
+    contain: layout style;
     text-align: center;
     font-size: 100px;
     margin-bottom: 70px;
@@ -58,7 +59,14 @@ section{
 .link-employees .icon-with-text{
     display: flex;
     flex-direction: column;
+    justify-content: center;
     gap: 5px;
+}
+
+.icon-with-text{
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
 }
 
 .logo-wh{
@@ -176,6 +184,35 @@ th, td{
     padding: 10px;
 }
 
+.titleModal {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+
+.btnModal {
+    width: 60px;
+    margin-left: 50px;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    background-color: #859533;
+    color: white;
+    cursor: pointer;
+}
+
+
+.btnDelete:hover {
+    background-color: red;
+    box-shadow: rgba(14, 30, 37, 0.20) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+}
+
+.btnNo:hover {
+    background-color: green;
+    box-shadow: rgba(14, 30, 37, 0.20) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+}
+
 .pagination{
     display: flex;
     justify-content: center;
@@ -208,4 +245,14 @@ th, td{
   /* Pour les en-têtes du tableau */
   th {
     border-bottom: 2px solid black; /* Ligne un peu plus épaisse pour les en-têtes */
+  }
+
+  .error{
+    color: red;
+    font-size: 13px;
+    margin-top: 5px;
+  }
+
+  .errorInput{
+    border: 2px solid red;
   }

@@ -1,10 +1,12 @@
 import React from "react";
 
-const InputField = ({ label, type, name, value, onChange, required}) => {
+const InputField = ({ label,id, type, name, value, onChange, error}) => {
+  const inputError = error ? "errorInput" : "";
   return (
     <div className="input-container">
-      <label htmlFor={name}>{label}</label>
-      <input type={type} name={name} value={value} onChange={onChange} required={required}/>
+      <label htmlFor={id}>{label}</label>
+      <input id={id} type={type} name={name} value={value} onChange={onChange} error={error} className={inputError}/>
+      {error && <p className="error">{error}</p>}
     </div>
   );
 };

@@ -1,18 +1,40 @@
+// import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+// import Dashboard from "./Pages/Dashboard/Dashboard";
+// import Employees from "./Pages/Employees/Employees";
+// import "./global.css";
+// // import "./global.min.css";
+// import React from "react";
+
+// function App() {
+//   return (
+//     <Router>
+//       <Routes>
+//         <Route path="/" element={<Dashboard />} />
+//         <Route path="/:id" element={<Dashboard />} />
+//         <Route path="/employees" element={<Employees />} />
+//       </Routes>
+//     </Router>
+//   );
+// }
+
+// export default App;
+
+import React, { Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Dashboard from "./Pages/Dashboard/Dashboard";
-import Employees from "./Pages/Employees/Employees";
-import EmployeeForm from "./components/EmployeeForm/EmployeeForm";
 import "./global.css";
-import React from "react";
+const Dashboard = React.lazy(() => import("./Pages/Dashboard/Dashboard"));
+const Employees = React.lazy(() => import("./Pages/Employees/Employees")); 
 
 function App() {
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/employees" element={<Employees />} />
-        <Route path="/edit-employee/:id" element={<EmployeeForm />} />
-      </Routes>
+      <Suspense fallback={<div>Chargement...</div>}>
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/:id" element={<Dashboard />} />
+          <Route path="/employees" element={<Employees />} />
+        </Routes>
+      </Suspense>
     </Router>
   );
 }
