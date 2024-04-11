@@ -4,8 +4,6 @@ import Header from "../../components/Header/Header";
 import { Modal } from "react-new-modal-plugin";
 import "react-new-modal-plugin/dist/global.css";
 import { Link } from "react-router-dom";
-
-// import users from "../../assets/img/users-solid.svg";
 import UsersIcon from "../../components/UsersIcon/UsersIcon";
 import { v4 as uuidv4 } from "uuid";
 
@@ -20,14 +18,15 @@ const Dashboard = () => {
   const handleEmployeeSave = (newEmployee) => {
     // Fonction pour calculer l'âge à partir de la date de naissance.
     const calculateAge = (dateOfBirth) => {
-      const today = new Date();
-      const birthDate = new Date(dateOfBirth);
-      let age = today.getFullYear() - birthDate.getFullYear();
-      const m = today.getMonth() - birthDate.getMonth();
+      const today = new Date(); //Obtient la date actuelle.
+      const birthDate = new Date(dateOfBirth); // Convertit la date de naissance en objet Date.
+      let age = today.getFullYear() - birthDate.getFullYear(); // Calcule l'âge en soustrayant les années.
+      const m = today.getMonth() - birthDate.getMonth(); // Calcule la différence de mois.
+      // Vérifie si le mois actuel est inférieur au mois de naissance ou si les mois sont égaux et le jour actuel est inférieur au jour de naissance.
       if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
         age--;
       }
-      return age;
+      return age; // Retourne l'âge calculé.
     };
 
     // Vérifier si l'employé a au moins 18 ans.

@@ -11,7 +11,7 @@
     "react": "^18.2.0",
     "react-datepicker": "^6.3.0",
     "react-dom": "^18.2.0",
-    "react-new-modal-plugin": "^0.3.2",
+    "react-new-modal-plugin": "^0.3.4",
     "react-router-dom": "^6.22.3",
     "react-scripts": "5.0.1",
     "react-select": "^5.8.0",

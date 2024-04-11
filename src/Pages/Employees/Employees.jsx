@@ -1,12 +1,9 @@
 import React, { useEffect, useMemo, useState, useCallback } from "react";
 import { useTable, useSortBy, useGlobalFilter, usePagination } from "react-table";
-
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/img/logo.webp";
 import { Modal } from "react-new-modal-plugin";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import editIcon from "../../assets/img/pen-to-square-solid.svg";
 import trashIcon from "../../assets/img/trash-can-solid.svg";
 
@@ -17,7 +14,7 @@ const Employees = () => {
   const [currentEmployeeId, setCurrentEmployeeId] = useState(null); // État pour stocker l'ID de l'employé à supprimer
 
   useEffect(() => {
-    // Récupérer les données des employés depuis le stockage local
+    // Récupére les données des employés depuis le stockage local
     const savedEmployees = JSON.parse(localStorage.getItem("employees")) || [];
     setData(savedEmployees);
   }, []);

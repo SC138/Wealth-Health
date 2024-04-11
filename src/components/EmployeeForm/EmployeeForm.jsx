@@ -7,28 +7,25 @@ import states from "states-us";
 import "react-datepicker/dist/react-datepicker.css";
 import { departmentOptions } from "../Departments/Departments";
 
-// Options pour le champ de sélection du département.
-// const departmentOptions = [
-//   { value: "Sales", label: "Sales" },
-//   { value: "Marketing", label: "Marketing" },
-//   { value: "Engineering", label: "Engineering" },
-//   { value: "Human Resources", label: "Human Resources" },
-//   { value: "Legal", label: "Legal" },
-// ];
-
 // Composant pour le formulaire d'employé avec une prop pour la fonction de sauvegarde de l'employé.
 const EmployeeForm = ({ onEmployeeSave, resetForm, setResetForm }) => {
   const { id } = useParams();
   const [errors, setErrors] = useState({}); // Nouvel état pour les erreurs de validation.
 
+  // Utilise useEffect pour charger les données de l'employé depuis le localStorage en mode édition.
   useEffect(() => {
+    // Vérifie si un 'id' est fourni dans l'URL, indiquant un mode édition.
     if (id) {
+      // Tente de récupérer la liste des employés stockée dans localStorage.
       const employees = JSON.parse(localStorage.getItem("employees")) || [];
+      // Cherche l'employé spécifique à éditer en utilisant l'ID.
       const employeeToEdit = employees.find((emp) => emp.id === id);
+      // Si un employé correspondant est trouvé, met à jour l'état 'employee' avec ses données.
       if (employeeToEdit) {
         setEmployee(employeeToEdit);
       }
     }
+    // L'effet se re-déclenche avec un nouvel ID pour mettre à jour les données de l'employé à éditer.
   }, [id]);
 
   // Initialise l'état pour les données de l'employé.
@@ -117,8 +114,8 @@ const EmployeeForm = ({ onEmployeeSave, resetForm, setResetForm }) => {
   }, [resetForm, setResetForm]);
 
   // Fonction pour gérer le style des érreurs de date (naissance et démarrage).
-  const startDateError = errors.StartDate ? "errorInput" : "";
-  const birthDateError = errors.DateOfBirth ? "errorInput" : "";
+  // const startDateError = errors.StartDate ? "errorInput" : "";
+  // const birthDateError = errors.DateOfBirth ? "errorInput" : "";
 
   return (
     <div className="form-container">
@@ -168,10 +165,12 @@ const EmployeeForm = ({ onEmployeeSave, resetForm, setResetForm }) => {
             maxDate={new Date()}
             showYearDropdown
             dropdownMode="select"
-            className={birthDateError}
+            // className={birthDateError}
+            className={errors.DateOfBirth ? "errorInput" : ""}
             aria-required="true"
             aria-invalid={Boolean(errors.DateOfBirth)}
           />
+          {errors.DateOfBirth && <div className="error-message">{errors.DateOfBirth}</div>}
         </div>
 
         {/* Start Date DatePicker */}
@@ -184,10 +183,12 @@ const EmployeeForm = ({ onEmployeeSave, resetForm, setResetForm }) => {
             dateFormat="dd/MM/yyyy"
             showYearDropdown
             dropdownMode="select"
-            className={startDateError}
+            // className={startDateError}
+            className={errors.StartDate ? "errorInput" : ""}
             aria-required="true"
             aria-invalid={Boolean(errors.StartDate)}
           />
+          {errors.StartDate && <div className="error-message">{errors.StartDate}</div>}
         </div>
 
         {/* Address Fields */}
@@ -219,7 +220,7 @@ const EmployeeForm = ({ onEmployeeSave, resetForm, setResetForm }) => {
         <div className="input-container">
           <label htmlFor="state">State</label>
           <Select
-            inputId="state" 
+            inputId="state"
             options={stateOptions}
             onChange={handleSelectChange}
             placeholder="Select State..."
@@ -248,7 +249,7 @@ const EmployeeForm = ({ onEmployeeSave, resetForm, setResetForm }) => {
         <div className="input-container">
           <label htmlFor="department">Department</label>
           <Select
-            inputId="department" 
+            inputId="department"
             options={departmentOptions}
             onChange={(selectedOption) =>
               setEmployee({ ...employee, Department: selectedOption.value })
